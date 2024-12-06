@@ -41,3 +41,22 @@ def get_chunk_info_by_file_name(file_names: list, ai_search_version: str, select
     json_data = response.json()
     
     return json_data
+
+
+def get_chunk_info_by_query(query: str, select_field = "id, document_name", num_doc=10):
+    ai_search_version=os.environ["AZURE_OPENAI_API_VERSION"]
+    end_point = SEARCH_API_URL + "?api-version=" + ai_search_version
+    
+    headers = {'content-type': 'application/json', 'api-key': AZURE_API_KEY}
+    payload = {"search": query, 
+               "queryType": "simple", 
+            #    "searchMode": "all", 
+               "searchFields": "content",
+               "top": 10,
+               "count": True,
+               "select": select_field
+               }
+    response = requests.post(end_point, json=payload, headers=headers)
+    json_data = response.json()
+    
+    return json_data
